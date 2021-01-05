@@ -14,6 +14,14 @@ import re
 
 exit_flag = False
 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+formatter = logging.Formatter("%(asctime)s %(name)s\t%(message)s")
+
+stream_handler = logging.StreamHandler()
+logger.addHandler(stream_handler)
+
 
 def search_for_magic(filename, start_line, magic_string):
     # Your code here
