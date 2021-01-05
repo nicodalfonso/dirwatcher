@@ -26,6 +26,13 @@ def watch_directory(path, magic_string, extension, interval):
 
 def create_parser():
     parser = argparse.ArgumentParser()
+    parser.add_argument("dir", help="the directory to watch")
+    parser.add_argument("magic_text", help='the "magic text" to search for')
+    parser.add_argument("filetype",
+                        help="""extension for the type of files to be
+                        monitored for "magic text" (i.e., .txt, .log)""")
+    parser.add_argument("polling_interval",
+                        help="how often to scan the directory, in seconds")
     return parser
 
 
