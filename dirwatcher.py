@@ -61,8 +61,14 @@ def signal_handler(sig_num, frame):
     :param frame: Not used
     :return None
     """
+    global exit_flag
+    sig_name = signal.Signals(sig_num).name
+
     # log the associated signal name
-    logger.warn('Received ' + signal.Signals(sig_num).name)
+    logger.warn('Received ' + sig_name)
+    if sig_name == "SIGTERM" or sig_name == "SIGINT":
+        logger.info("Exiting")
+        exit_flag = True
 
 
 def main(args):
