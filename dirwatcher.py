@@ -10,6 +10,7 @@ import signal
 import time
 import logging
 import argparse
+import re
 
 exit_flag = False
 
@@ -24,17 +25,23 @@ def watch_directory(path, magic_string, extension, interval):
     return
 
 
+def validate_ext(parser, ext):
+    if not re.match(r"^\.[\w|\d]+$\S*", ext):
+        parser.error("extension format is invalid")
+
+
 def create_parser(args):
     parser = argparse.ArgumentParser()
-    parser.add_argument("dir", help="the directory to watch")
+    parser.add_argument("dir", required=True, help="the directory to watch")
     parser.add_argument("int", metavar="polling_interval",
                         type=float, default=1.0,
                         help="""how often to scan the directory, in seconds.
                         Defaults to 1.0""")
-    parser.add_argument("ext",
+    parser.add_argument("ext", required=True,
                         help="""extension for the type of files to be
                         monitored for "magic text" (i.e., .txt, .log)""")
-    parser.add_argument("magic", help='the "magic text" to search for')
+    parser.add_argument("magic", required=True,
+                        help='the "magic text" to search for')
     return parser.parse_args(args)
 
 
@@ -62,6 +69,8 @@ def main(args):
     polling_interval = ns.polling_interval
     ext = ns.ext
     magic= ns.magic
+
+    validate_ext(ext)
 
     while not exit_flag:
         try:
