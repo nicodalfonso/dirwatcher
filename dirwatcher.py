@@ -8,8 +8,10 @@ __author__ = "Nico D Alfonso"
 import sys
 import signal
 import time
+import logging
 
 exit_flag = False
+
 
 def search_for_magic(filename, start_line, magic_string):
     # Your code here
