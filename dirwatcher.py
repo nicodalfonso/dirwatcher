@@ -40,17 +40,17 @@ def validate_ext(parser, ext):
 
 def create_parser(args):
     parser = argparse.ArgumentParser()
-    parser.add_argument("dir", required=True, help="the directory to watch")
-    parser.add_argument("int", metavar="polling_interval",
-                        type=float, default=1.0,
+    parser.add_argument("dir", help="the directory to watch")
+    parser.add_argument("--int", type=float, default=1.0,
                         help="""how often to scan the directory, in seconds.
                         Defaults to 1.0""")
-    parser.add_argument("ext", required=True,
+    parser.add_argument("ext",
                         help="""extension for the type of files to be
                         monitored for "magic text" (i.e., .txt, .log)""")
-    parser.add_argument("magic", required=True,
-                        help='the "magic text" to search for')
-    return parser.parse_args(args)
+    parser.add_argument("magic", help='the "magic text" to search for')
+    ns = parser.parse_args(args)
+    validate_ext(parser, ns.ext)
+    return ns
 
 
 def signal_handler(sig_num, frame):
@@ -74,11 +74,9 @@ def main(args):
 
     ns = create_parser(args)
     dir = ns.dir
-    polling_interval = ns.polling_interval
+    polling_interval = ns.int
     ext = ns.ext
     magic= ns.magic
-
-    validate_ext(ext)
 
     while not exit_flag:
         try:
