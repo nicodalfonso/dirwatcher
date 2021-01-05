@@ -6,10 +6,11 @@ Dirwatcher - A long-running program
 __author__ = "Nico D Alfonso"
 
 import sys
+import os
 import signal
-import time
-import logging
 import argparse
+import logging
+import time
 import re
 
 exit_flag = False
@@ -29,7 +30,11 @@ def search_for_magic(filename, start_line, magic_string):
 
 
 def watch_directory(path, magic_string, extension, interval):
-    # Your code here
+    # logger.info(os.path.abspath(os.path.join(os.getcwd(), path)))
+    if os.path.exists(os.path.abspath(os.path.join(os.getcwd(), path))):
+        logger.info(f"{path} exists")
+    else:
+        logger.warning(f"{path} does not exist")
     return
 
 
@@ -65,7 +70,7 @@ def signal_handler(sig_num, frame):
     sig_name = signal.Signals(sig_num).name
 
     # log the associated signal name
-    logger.warn('Received ' + sig_name)
+    logger.warning('Received ' + sig_name)
     if sig_name == "SIGTERM" or sig_name == "SIGINT":
         logger.info("Exiting")
         exit_flag = True
@@ -84,14 +89,16 @@ def main(args):
     ext = ns.ext
     magic= ns.magic
 
+    global exit_flag
+
     while not exit_flag:
         try:
-            # call my directory watching function
-            pass
+            logger.info("logging")
+            watch_directory(dir, magic, ext, polling_interval)
         except Exception as e:
             # This is an UNHANDLED exception
             # Log an ERROR level message here
-            pass
+            logger.warning(e)
 
         # put a sleep inside my while loop so I don't peg the cpu usage at 100%
         time.sleep(polling_interval)
