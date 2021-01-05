@@ -9,6 +9,7 @@ import sys
 import signal
 import time
 import logging
+import argparse
 
 exit_flag = False
 
@@ -24,8 +25,8 @@ def watch_directory(path, magic_string, extension, interval):
 
 
 def create_parser():
-    # Your code here
-    return
+    parser = argparse.ArgumentParser()
+    return parser
 
 
 def signal_handler(sig_num, frame):
@@ -46,6 +47,8 @@ def main():
     signal.signal(signal.SIGTERM, signal_handler)
     # Now my signal_handler will get called if OS sends
     # either of these to my process.
+
+    ns = create_parser()
 
     while not exit_flag:
         try:
