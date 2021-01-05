@@ -30,11 +30,13 @@ def search_for_magic(filename, start_line, magic_string):
 
 
 def watch_directory(path, magic_string, extension, interval):
-    # logger.info(os.path.abspath(os.path.join(os.getcwd(), path)))
-    if os.path.exists(os.path.abspath(os.path.join(os.getcwd(), path))):
-        logger.info(f"{path} exists")
+    dir = os.path.abspath(os.path.join(os.getcwd(), path))
+    if os.path.exists(dir):
+        for file in os.listdir(dir):
+            if file.endswith(extension):
+                logger.info(f"{file} ends with {extension}")
     else:
-        logger.warning(f"{path} does not exist")
+        logger.warning(f"directory {path} does not exist")
     return
 
 
