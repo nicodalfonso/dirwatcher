@@ -108,6 +108,7 @@ def signal_handler(sig_num, frame):
 
 
 def main(args):
+
     # Hook into these two signals from the OS
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
@@ -118,13 +119,21 @@ def main(args):
     dir = ns.dir
     polling_interval = ns.int
     ext = ns.ext
-    magic= ns.magic
+    magic = ns.magic
 
     global exit_flag
 
+    logger.info(
+        "-------------------------------------------------------------------"
+        )
+    logger.info("Beginning dirwatcher.py")
+    logger.info(f"searching for {magic} in {dir}")
+    logger.info(
+        "-------------------------------------------------------------------"
+        )
+
     while not exit_flag:
         try:
-            logger.info("logging")
             watch_directory(dir, magic, ext, polling_interval)
         except Exception as e:
             # This is an UNHANDLED exception
@@ -137,6 +146,14 @@ def main(args):
     # final exit point happens here
     # Log a message that we are shutting down
     # Include the overall uptime since program start
+    logger.info(
+        "-------------------------------------------------------------------"
+        )
+    logger.info("Stopped dirwatcher.py")
+    logger.info(f"Uptime was {time.perf_counter()}")
+    logger.info(
+        "-------------------------------------------------------------------"
+        )
 
 
 if __name__ == '__main__':
