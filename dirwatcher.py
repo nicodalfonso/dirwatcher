@@ -22,8 +22,11 @@ exit_flag = False
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-formatter = logging.Formatter("%(asctime)s %(name)s\t%(message)s")
+formatter = logging.Formatter(
+    "%(asctime)s %(name)s\t%(levelname)s\n[%(threadName)s  ] %(message)s"
+    )
 stream_handler = logging.StreamHandler()
+stream_handler.setFormatter(formatter)
 logger.addHandler(stream_handler)
 
 watched_files = {}
@@ -54,13 +57,14 @@ def detect_removed_files(files):
             del(watched_files[f])
 
 
-def search_for_magic(lines, start_line, magic_string):
+def search_for_magic(file, lines, start_line, magic_string):
     """
     Scans new lines in target files for the existence of "magic text".
     """
     for i, line in enumerate(lines[start_line:]):
         if re.search(magic_string, line):
-            logger.info(f"{magic_string} found on line {start_line + i + 1}")
+            logger.info(
+                f"{magic_string} found on line {start_line + i + 1} of {file}")
 
 
 def watch_directory(path, magic_string, extension):
@@ -84,7 +88,9 @@ def watch_directory(path, magic_string, extension):
                 f.close()
             number_of_lines = len(lines)
             if watched_files[file] < number_of_lines:
-                search_for_magic(lines, watched_files[file], magic_string)
+                search_for_magic(
+                    file, lines, watched_files[file], magic_string
+                    )
                 watched_files[file] = number_of_lines
     else:
         logger.warning(f"directory {path} does not exist")
@@ -160,6 +166,7 @@ def main(args):
     global exit_flag
 
     logger.info(
+        "\n"
         "-------------------------------------------------------------------\n"
         "Beginning dirwatcher.py\n"
         f"searching for {magic} in {dir}\n"
@@ -185,6 +192,7 @@ def main(args):
     M = int(runtime) // 60
     H = M // 60
     logger.info(
+        "\n"
         "-------------------------------------------------------------------\n"
         "Stopped dirwatcher.py\n"
         f"Uptime was {H:02d}:{M:02d}:{S if S / 10 >= 1 else '0' + str(S)}\n"
