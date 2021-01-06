@@ -23,6 +23,24 @@ formatter = logging.Formatter("%(asctime)s %(name)s\t%(message)s")
 stream_handler = logging.StreamHandler()
 logger.addHandler(stream_handler)
 
+watched_files = {}
+
+
+def detect_added_files(files):
+    global watched_files
+    for f in files:
+        if f not in watched_files:
+            logger.info(f"Adding {f} to watchlist")
+            watched_files[f] = 0
+
+
+def detect_removed_files(files):
+    global watched_files
+    for f in watched_files:
+        if f not in files:
+            logger.info(f"Removing {f} from watchlist")
+            del(watched_files[f])
+
 
 def search_for_magic(filename, start_line, magic_string):
     # Your code here
@@ -30,11 +48,24 @@ def search_for_magic(filename, start_line, magic_string):
 
 
 def watch_directory(path, magic_string, extension, interval):
+    global watched_files
+
     dir = os.path.abspath(os.path.join(os.getcwd(), path))
     if os.path.exists(dir):
-        for file in os.listdir(dir):
-            if file.endswith(extension):
-                logger.info(f"{file} ends with {extension}")
+        files = [f for f in os.listdir(dir) if f.endswith(extension)]
+        detect_added_files(files)
+        detect_removed_files(files)
+        # search_for_magic(dir)
+
+        # for file in os.listdir(dir):
+        #     if file.endswith(extension):
+
+        #         with open(file) as f:
+        #             lines = f.readlines()
+        #             number_of_lines = len(lines)
+        #             if watched_files.get(file, 0) < number_of_lines:
+        #                 search_for_magic(file, watched_files[file], magic_string)
+        #                 watched_files[file] = number_of_lines
     else:
         logger.warning(f"directory {path} does not exist")
     return
