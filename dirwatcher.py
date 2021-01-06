@@ -45,7 +45,7 @@ def detect_removed_files(files):
 def search_for_magic(lines, start_line, magic_string):
     for i, line in enumerate(lines[start_line:]):
         if re.search(magic_string, line):
-            logger.info(f"{magic_string} found on line {start_line + i}")
+            logger.info(f"{magic_string} found on line {start_line + i + 1}")
 
 
 def watch_directory(path, magic_string, extension, interval):
