@@ -124,11 +124,9 @@ def main(args):
     global exit_flag
 
     logger.info(
-        "-------------------------------------------------------------------"
-        )
-    logger.info("Beginning dirwatcher.py")
-    logger.info(f"searching for {magic} in {dir}")
-    logger.info(
+        "-------------------------------------------------------------------\n"
+        "Beginning dirwatcher.py\n"
+        f"searching for {magic} in {dir}\n"
         "-------------------------------------------------------------------"
         )
 
@@ -146,13 +144,15 @@ def main(args):
     # final exit point happens here
     # Log a message that we are shutting down
     # Include the overall uptime since program start
+    runtime = time.perf_counter()
+    S = runtime % 100
+    M = int(runtime) // 60
+    H = M // 60
     logger.info(
-        "-------------------------------------------------------------------"
-        )
-    logger.info("Stopped dirwatcher.py")
-    logger.info(f"Uptime was {time.perf_counter()}")
-    logger.info(
-        "-------------------------------------------------------------------"
+        "-------------------------------------------------------------------\n"
+        "Stopped dirwatcher.py\n"
+        f"Uptime was {H:02d}:{M:02d}:{S if S / 10 >= 1 else '0' + str(S)}\n"
+        "-------------------------------------------------------------------\n"
         )
 
 
