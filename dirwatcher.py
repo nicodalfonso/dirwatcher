@@ -42,9 +42,10 @@ def detect_removed_files(files):
             del(watched_files[f])
 
 
-def search_for_magic(filename, start_line, magic_string):
-    # Your code here
-    return
+def search_for_magic(lines, start_line, magic_string):
+    for i, line in enumerate(lines[start_line:]):
+        if re.search(magic_string, line):
+            logger.info(f"{magic_string} found on line {start_line + i}")
 
 
 def watch_directory(path, magic_string, extension, interval):
@@ -55,17 +56,14 @@ def watch_directory(path, magic_string, extension, interval):
         files = [f for f in os.listdir(dir) if f.endswith(extension)]
         detect_added_files(files)
         detect_removed_files(files)
-        # search_for_magic(dir)
-
-        # for file in os.listdir(dir):
-        #     if file.endswith(extension):
-
-        #         with open(file) as f:
-        #             lines = f.readlines()
-        #             number_of_lines = len(lines)
-        #             if watched_files.get(file, 0) < number_of_lines:
-        #                 search_for_magic(file, watched_files[file], magic_string)
-        #                 watched_files[file] = number_of_lines
+        for file in files:
+            with open(os.path.join(dir, file)) as f:
+                lines = f.readlines()
+                f.close()
+            number_of_lines = len(lines)
+            if watched_files[file] < number_of_lines:
+                search_for_magic(lines, watched_files[file], magic_string)
+                watched_files[file] = number_of_lines
     else:
         logger.warning(f"directory {path} does not exist")
     return
