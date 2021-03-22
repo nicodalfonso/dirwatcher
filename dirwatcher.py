@@ -44,7 +44,7 @@ def detect_added_files(files):
     """
     global watched_files
     for f in files:
-        if f not in watched_files:
+        if f not in watched_files or watched_files[f] == -1:
             logger.info(f"Adding {f} to watchlist")
             watched_files[f] = 0
 
@@ -57,9 +57,9 @@ def detect_removed_files(files):
     """
     global watched_files
     for f in watched_files:
-        if f not in files:
+        if f not in files and watched_files[f] != -1:
             logger.info(f"Removing {f} from watchlist")
-            del watched_files[f]
+            watched_files[f] = -1
 
 
 def search_for_magic(file, lines, start_line, magic_string):
