@@ -11,6 +11,10 @@
   </a>
 </p>
 
+<p align="center">
+  <img src="./preview.gif" alt="Preview of dirwatcher" />
+</p>
+
 > A long running program that will monitor a specified directory for changes to any files of a type specified by the end user. Determines if any instances of a user-specified string (aka &#34;magic text&#34;) appear in the files being watched, and logs their location.
 >
 > Inspired by the story of [The Cuckoo's Egg](https://en.wikipedia.org/wiki/The_Cuckoo%27s_Egg).
